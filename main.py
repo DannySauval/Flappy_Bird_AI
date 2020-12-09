@@ -1,47 +1,51 @@
-"""
-    Importing PyGame module.
-    PyGame handles graphics and inputs/outputs.
-"""
-import pygame
 import sys
 import random
-from Bird import Bird
 
 import numpy as np
 
-from settings import *
+from settings import WORLD, BIRD, PIPE
+import pygame
+pygame.init()
+
+# Window setup
+screen = pygame.display.set_mode((WORLD['WIDTH'], WORLD['HEIGHT']))
+icon = pygame.image.load('assets/flappy_bird_icon.png')
+pygame.display.set_caption("Flappy Bird AI")
+pygame.display.set_icon(icon)
+
+from Bird import Bird
 
 def draw_floor():
-    screen.blit(floor_surface, (floor_x_pos, FLOOR_BIAS))
-    screen.blit(floor_surface, (floor_x_pos + WIDTH, FLOOR_BIAS))
+    screen.blit(floor_surface, (floor_x_pos, WORLD['FLOOR_BIAS']))
+    screen.blit(floor_surface, (floor_x_pos + WORLD['WIDTH'], WORLD['FLOOR_BIAS']))
 
-def create_pipe():
+def create_pipe(pipe_number):
     random_pipe_pos = random.choice(pipe_height)
-    bottom_pipe = pipe_surface.get_rect(midtop = (350, random_pipe_pos))
-    top_pipe = pipe_surface.get_rect(midbottom = (350, random_pipe_pos - 150))
+    bottom_pipe = pipe_surface.get_rect(midtop = ((pipe_number*250)+350, random_pipe_pos))
+    top_pipe = pipe_surface.get_rect(midbottom = ((pipe_number*250)+350, random_pipe_pos - 150))
 
     return bottom_pipe, top_pipe
 
 def data_display():
     score_surface = game_font.render(f'GEN HS : {int(best_gen_highscore)}', True, (255, 255, 255))
-    score_rect = score_surface.get_rect(center = (WIDTH-100, 10))
+    score_rect = score_surface.get_rect(center = (WORLD['WIDTH']-100, 10))
     screen.blit(score_surface, score_rect)
 
     score_surface = game_font.render(f'HS : {int(Bird.high_score)}', True, (255, 255, 255))
-    score_rect = score_surface.get_rect(center = (WIDTH-100, 30))
+    score_rect = score_surface.get_rect(center = (WORLD['WIDTH']-100, 30))
     screen.blit(score_surface, score_rect)
 
     score_surface = game_font.render(f'BA : {int(Bird.alive_birds)}', True, (255, 255, 255))
-    score_rect = score_surface.get_rect(center = (WIDTH-100, 50))
+    score_rect = score_surface.get_rect(center = (WORLD['WIDTH']-100, 50))
     screen.blit(score_surface, score_rect)
 
     score_surface = game_font.render(f'GEN : {int(current_generation)}', True, (255, 255, 255))
-    score_rect = score_surface.get_rect(center = (WIDTH-100, 70))
+    score_rect = score_surface.get_rect(center = (WORLD['WIDTH']-100, 70))
     screen.blit(score_surface, score_rect)
 
 def move_pipes(pipes):
     for pipe in pipes:
-        pipe.centerx -= 2.5
+        pipe.centerx -= PIPE['PIPE_SPEED']
     return pipes
 
 def draw_pipes(pipes):
@@ -56,12 +60,6 @@ pygame.init()
 
 game_active = True
 
-# Window setup
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-icon = pygame.image.load('assets/flappy_bird_icon.png')
-pygame.display.set_caption("Flappy Bird AI")
-pygame.display.set_icon(icon)
-
 # Setting up framerate
 clock = pygame.time.Clock()
 
@@ -73,17 +71,16 @@ bg_surface = pygame.image.load('assets/background-day.png').convert()
 
 floor_surface = pygame.image.load('assets/base.png').convert()
 floor_x_pos = 0
- 
-bird_surface = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
-bird_rect = bird_surface.get_rect(center = (50, HEIGHT/2))
 
 pipe_surface = pygame.image.load('assets/pipe-green.png')
 pipe_list = []
 pipe_height = [200, 300, 400]
-pipe_list.extend(create_pipe())
+
+for i in range(3):
+    pipe_list.extend(create_pipe(i))
 
 game_over_surface = pygame.image.load('assets/message.png').convert_alpha()
-game_over_rect = game_over_surface.get_rect(center = (WIDTH/2, HEIGHT/2))
+game_over_rect = game_over_surface.get_rect(center = (WORLD['WIDTH']/2, WORLD['HEIGHT']/2))
 
 def model_crossover(parent1_w, parent2_w):
     new_son1_w = []
@@ -126,7 +123,7 @@ def model_mutate(weights_list):
 # Birds' nn's weights are random
 def generate_pop():
     gen_birds = []
-    for _ in range(POP_SIZE):
+    for _ in range(BIRD['POP_SIZE']):
         weights = [np.random.randn(4, 7), np.random.randn(7, 1)]
         gen_bird = Bird(weights)
         gen_birds.append(gen_bird)
@@ -137,7 +134,7 @@ def new_bird_batch():
     # son1_w, son2_w = model_crossover(Bird.best_bird1_w, Bird.best_bird2_w)
 
     gen_birds.append(Bird(best_bird_weights)) # We want to keep the previous parents
-    for _ in range(POP_SIZE-1):
+    for _ in range(BIRD['POP_SIZE']-1):
         gen_birds.append(Bird(model_mutate(best_bird_weights)))
 
     return gen_birds
@@ -156,12 +153,17 @@ def load_weights(filename):
     loaded_weights = []
 
     loaded_weights.append(np.loadtxt(filename+".001"))
-    loaded_weights[0] = loaded_weights[0].reshape(WEIGHTS1[0] , WEIGHTS1[1])
+    loaded_weights[0] = loaded_weights[0].reshape(BIRD['WEIGHTS1'][0] , BIRD['WEIGHTS1'][1])
 
     loaded_weights.append(np.loadtxt(filename+".002"))
-    loaded_weights[1] = loaded_weights[1].reshape(WEIGHTS2[0] , WEIGHTS2[1])
+    loaded_weights[1] = loaded_weights[1].reshape(BIRD['WEIGHTS2'][0] , BIRD['WEIGHTS2'][1])
 
     return loaded_weights
+
+def reset_pipes(pipe_list):
+    for i in range(3):
+        pipe_list[i*2], pipe_list[(i*2)+1] = create_pipe(i)
+    return pipe_list
 
 birds = generate_pop()
 
@@ -169,6 +171,8 @@ best_bird_weights = []
 best_bird_fitness = 0
 
 timer = 0
+out_pipe = 0
+addTimer = 250
 
 current_generation = 0
 best_gen_highscore = 0
@@ -183,40 +187,22 @@ while True:
             if event.key == pygame.K_SPACE and game_active:
                 for bird in birds:
                     bird.jump()
-            if event.key == pygame.K_SPACE and game_active == False:
-                game_active = True
-                pipe_list.clear()
-            if event.key == pygame.K_c:
-                # reset
-                for bird in birds:
-                    if bird.fitness > best_bird_fitness:
-                        best_bird_weights = bird.net.weights
-                        best_bird_fitness = bird.fitness
-
-                if Bird.high_score > best_gen_highscore:
-                    best_gen_highscore = Bird.high_score
-
-                birds.clear()
-                birds = new_bird_batch()
-                Bird.high_score = 0
-                game_active = True
-                pipe_list.clear()
-                timer = 0
-                pipe_list.extend(create_pipe())
-
-                save_weights(best_bird_weights, "weights")
-                current_generation += 1
 
     """
         TODO : Two lists, rather go through the alive_bird_list to avoid iterating over known dead birds.
     """
+    # For each birds, decide if it's going to jump or not.
     for bird in birds:
         bird.make_decision(pipe_list)
 
     timer += 1
-    if timer >= 100:
-        pipe_list.extend(create_pipe())
+    if timer >= addTimer:
+        pipe_list[out_pipe].centerx = 350
+        pipe_list[out_pipe+1].centerx = 350
+
+        out_pipe = (out_pipe+2)%6
         timer = 0
+        addTimer = 80
 
     screen.blit(bg_surface, (0, 0))
 
@@ -227,11 +213,8 @@ while True:
         for bird in birds:
             bird.update(screen, pipe_list)
 
-        if game_active == False:
-            # reset
-            """
-                Get the bird with the best fitness.
-            """
+        if not game_active:
+            # Get the bird with the best fitness.
             for bird in birds:
                 if bird.fitness > best_bird_fitness:
                     best_bird_weights = bird.net.weights
@@ -244,11 +227,14 @@ while True:
             birds = new_bird_batch()
             Bird.high_score = 0
             game_active = True
-            pipe_list.clear()
             timer = 0
-            pipe_list.extend(create_pipe())
 
-            save_weights(best_bird_weights, "weights")
+            out_pipe = 0
+            addTimer = 250
+            
+            pipe_list = reset_pipes(pipe_list)
+
+            # save_weights(best_bird_weights, "weights")
 
             current_generation += 1
 
@@ -263,10 +249,10 @@ while True:
     floor_x_pos -= 1
     draw_floor()
 
-    if floor_x_pos <= -WIDTH:
+    if floor_x_pos <= -WORLD['WIDTH']:
         floor_x_pos = 0
 
     pygame.display.update()
-    clock.tick(1000)
+    clock.tick(120)
 
 pygame.quit()

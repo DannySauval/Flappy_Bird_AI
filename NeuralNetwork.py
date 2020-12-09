@@ -26,7 +26,6 @@ class NeuralNetwork:
     def make_decision(self, x_input):
         """
             Make a decision based on the output of the Neural Network.
-            Should this function rather be in Bird class ??
         """
         self.feedforward(x_input)
         if self.output > 0.5:
@@ -58,9 +57,3 @@ if __name__ == '__main__':
     mean /= N
 
     print(mean)
-
-    print('-----------')
-    weights = [np.random.rand(4, 7), np.random.rand(7, 1)]
-    nn = NeuralNetwork(weights)
-    nn.make_decision(x)
-    print(nn)

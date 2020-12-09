@@ -1,16 +1,24 @@
+"""
+    This file stores the constants of the code.
+    It makes it easier to change parameters without touching the code.
+"""
+
 # WORLD CONSTANTS
-WIDTH = 288
-HEIGHT = 512
-FLOOR_BIAS = 450
+WORLD = dict(
+    WIDTH = 288,
+    HEIGHT = 512,
+    FLOOR_BIAS = 450)
 
 # BIRD CONSTANTS
-POP_SIZE = 300
-WEIGHTS1 = (4, 7)
-WEIGHTS2 = (7, 1)
-GRAVITY = 0.125
-JUMP_HEIGHT = 4
-FITNESS_STEP = 0.1
+# TODO : Make it compatible with X weights, maybe using a list
+BIRD = dict(
+    POP_SIZE = 300,
+    WEIGHTS1 = (4, 7),
+    WEIGHTS2 = (7, 1),
+    GRAVITY = 0.125,
+    JUMP_HEIGHT = 4,
+    FITNESS_STEP = 0.1)
 
 # Pipe constants
-PIPE_SPEED = 2.5
-PIPE_SPAWN_SPEED = 1200
+PIPE = dict(
+    PIPE_SPEED = 2.5)
