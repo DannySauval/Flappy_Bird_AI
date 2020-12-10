@@ -9,7 +9,7 @@ class Bird:
     high_score = 0
     alive_birds = 0
 
-    bird_surface = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
+    bird_surface : pygame.Surface = None
 
     def __init__(self, weights_list):
         self.score = 0   # Number of pipes
@@ -25,6 +25,10 @@ class Bird:
         self.bird_rect = Bird.bird_surface.get_rect(center = (50, WORLD['HEIGHT']/2))
 
         Bird.alive_birds += 1
+
+    @staticmethod
+    def clsinit():
+        Bird.bird_surface = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
 
     def reset(self):
         self.score = 0

@@ -5,6 +5,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## 2020-12-10 : Commit : "Game in a class. Fixed pipe system."
+### Changed
+
+1. Overall structure :
+	- Now the game is in a class.
+	- A lot of simplifying.
+2. Pipes system : 
+	- Fixed a bug, when resetting a pipe's position, I had forgotten to call for new random height.
+	- Fixed the bug where the space between pipes was not right. Not spacing is a parameter.
+3. NeuralNetwork :
+	- Calibrating itself using NeuralNetwork.init() after importing the class.
+
+## [Unreleased]
+
 ## 2020-12-09 : Commit : "New pipe system. Cleaned Bird Class."
 ### Changed
 

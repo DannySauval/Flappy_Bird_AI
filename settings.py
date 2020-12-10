@@ -12,7 +12,7 @@ WORLD = dict(
 # BIRD CONSTANTS
 # TODO : Make it compatible with X weights, maybe using a list
 BIRD = dict(
-    POP_SIZE = 300,
+    POP_SIZE = 200,
     WEIGHTS1 = (4, 7),
     WEIGHTS2 = (7, 1),
     GRAVITY = 0.125,
@@ -21,4 +21,5 @@ BIRD = dict(
 
 # Pipe constants
 PIPE = dict(
-    PIPE_SPEED = 2.5)
+    PIPE_SPEED = 2,
+    PIPE_SPACING = 250)

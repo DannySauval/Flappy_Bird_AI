@@ -88,7 +88,7 @@ pygame.display.set_icon(icon)
 clock = pygame.time.Clock()
 
 # Font
-game_font = pygame.font.Font('04B_19.ttf', 30)
+game_font = pygame.font.Font('assets/04B_19.ttf', 30)
 
 # Images import
 bg_surface = pygame.image.load('assets/background-day.png').convert()
