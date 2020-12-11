@@ -28,16 +28,15 @@ class Bird:
 
     @staticmethod
     def clsinit():
+        """
+            Initialize the class' bird_surface. We do it here so that we do it only once.
+        """
         Bird.bird_surface = pygame.image.load('assets/bluebird-midflap.png').convert_alpha()
 
-    def reset(self):
-        self.score = 0
-        self.bird_movement = 0
-        self.bird_rect = Bird.bird_surface.get_rect(center = (50, WORLD['HEIGHT']/2))
-        self.alive = True
-        self.next_pipe_index = 0
-
     def update_highscore(self):
+        """
+            Updates class' high_score value.
+        """
         if self.score > Bird.high_score:
             Bird.high_score = int(self.score)
 
@@ -54,22 +53,23 @@ class Bird:
         return True
 
     def make_decision(self, pipes):
-        # if len(pipes) > self.next_pipe_index + 1:
-        if pipes[self.next_pipe_index].right - self.bird_rect.right < 0:
-            self.next_pipe_index = (self.next_pipe_index+2)%6 # Next bottom pipe
-            self.score += 1
-        inputs = []
-        # X Distance to next pipes
-        inputs.append(pipes[self.next_pipe_index].left - self.bird_rect.right)
-        # Y Distance to top pipe
-        inputs.append(self.bird_rect.top - pipes[self.next_pipe_index+1].bottom)
-        # Y Distance to bottom pipe
-        inputs.append(pipes[self.next_pipe_index].top - self.bird_rect.bottom)
-        # Y Position of the bird
-        inputs.append(self.bird_rect.centery)
+        if self.alive:
+            # if len(pipes) > self.next_pipe_index + 1:
+            if pipes[self.next_pipe_index].right - self.bird_rect.left < 0:
+                self.next_pipe_index = (self.next_pipe_index+2)%6 # Next bottom pipe
+                self.score += 1
+            inputs = []
+            # X Distance to next pipes
+            inputs.append(pipes[self.next_pipe_index].left - self.bird_rect.right)
+            # Y Distance to top pipe
+            inputs.append(self.bird_rect.top - pipes[self.next_pipe_index+1].bottom)
+            # Y Distance to bottom pipe
+            inputs.append(pipes[self.next_pipe_index].top - self.bird_rect.bottom)
+            # Y Position of the bird
+            inputs.append(self.bird_rect.centery)
 
-        if self.net.make_decision(inputs):
-            self.jump()
+            if self.net.make_decision(inputs):
+                self.jump()
 
     def jump(self):
         self.bird_movement = -self.jump_height

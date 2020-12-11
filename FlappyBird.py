@@ -1,23 +1,24 @@
 import numpy as np
 import sys
 import random
-
-from settings import WORLD, PIPE, BIRD
 import pygame
+
+from settings import WORLD, PIPE, BIRD, PLAYER
 from Bird import Bird
 from NeuralNetwork import NeuralNetwork
 
+from Slider import Slider
 
 class FlappBird:
     def __init__(self):
         pygame.init()
 
         # Window setup
-        self.screen = pygame.display.set_mode((WORLD['WIDTH'], WORLD['HEIGHT']))
+        self.screen = pygame.display.set_mode((WORLD['WIDTH'], WORLD['HEIGHT']+100))
         pygame.display.set_caption("Flappy Bird AI")
         pygame.display.set_icon(pygame.image.load('assets/flappy_bird_icon.png'))
 
-        Bird.clsinit()
+        Bird.clsinit() # Initialization of Bird and NeuralNetwork classes
         NeuralNetwork.clsinit()
 
         self.game_active = True
@@ -25,24 +26,23 @@ class FlappBird:
         # Setting up framerate
         self.clock = pygame.time.Clock()
 
-        # Font
+        # Font & Images import
         self.game_font = pygame.font.Font('assets/04B_19.ttf', 20)
-
-        # Images import
         self.bg_surface = pygame.image.load('assets/background-day.png').convert()
-
         self.floor_surface = pygame.image.load('assets/base.png').convert()
         self.floor_x_pos = 0
 
         self.pipe_surface = pygame.image.load('assets/pipe-green.png')
         self.pipe_list = []
-        self.pipe_height = [200, 300, 400]
 
         for i in range(3):
             self.pipe_list.extend(self.create_pipe(i))
 
         self.game_over_surface = pygame.image.load('assets/message.png').convert_alpha()
         self.game_over_rect = self.game_over_surface.get_rect(center = (WORLD['WIDTH']/2, WORLD['HEIGHT']/2))
+
+        self.sliders_bg = pygame.surface.Surface((WORLD['WIDTH'], 100))
+        self.sliders_bg.fill((0, 0, 0))
 
         self.birds = self.generate_pop(mutated=False)
 
@@ -51,13 +51,17 @@ class FlappBird:
 
         self.timer = 0
         self.offscreen_pipe_index = 0
-        self.addTimer = PIPE['PIPE_SPACING']
+        self.add_pipe_timer = 2*PIPE['PIPE_SPACING']/PIPE['PIPE_SPEED']
 
         self.current_generation = 0
         self.best_gen_highscore = 0
 
+        self.sliders = [Slider("FPS", WORLD['FPS'], 10, 1000, 0, self.game_font)]
+
     def run(self):
-        # Main loop
+        """
+            Runs the main loop.
+        """
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -67,27 +71,33 @@ class FlappBird:
                     if event.key == pygame.K_SPACE and self.game_active:
                         for bird in self.birds:
                             bird.jump()
-                    
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    for s in self.sliders:
+                        if s.button_rect.collidepoint(pos):
+                            s.hit = True
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    for s in self.sliders:
+                        s.hit = False
+
             keys = pygame.key.get_pressed()  #checking pressed keys
             if keys[pygame.K_LEFT]:
                 self.move_pipes()
                 self.timer += 1
 
-            """
-                TODO : Two lists, rather go through the alive_bird_list to avoid iterating over known dead birds.
-            """
-            # For each birds, decide if it's going to jump or not.
-            for bird in self.birds:
-                bird.make_decision(self.pipe_list)
+            if not PLAYER['MANUAL_PLAY']:
+                # For each birds, decide if it's going to jump or not.
+                for bird in self.birds:
+                    bird.make_decision(self.pipe_list)
 
-            # Recycle offscreen pipe every addTimer frame.
+            # Recycle offscreen pipe every add_pipe_timer frames.
             self.timer += 1
-            if self.timer >= self.addTimer:
+            if self.timer >= self.add_pipe_timer:
                 self.pipe_list[self.offscreen_pipe_index], self.pipe_list[self.offscreen_pipe_index+1] = self.create_pipe(1)
 
                 self.offscreen_pipe_index = (self.offscreen_pipe_index+2)%6
                 self.timer = 0
-                self.addTimer = PIPE['PIPE_SPACING']/PIPE['PIPE_SPEED']
+                self.add_pipe_timer = PIPE['PIPE_SPACING']/PIPE['PIPE_SPEED']
 
             # Background
             self.screen.blit(self.bg_surface, (0, 0))
@@ -99,21 +109,32 @@ class FlappBird:
                 for bird in self.birds:
                     bird.update(self.screen, self.pipe_list)
 
-                if not self.game_active:
-                    self.reset_game()
-
-                # Pipes 
+                # Pipes
                 self.move_pipes()
                 self.draw_pipes()
                 self.data_display()
+                
+                if not self.game_active:
+                    self.reset_game()
             else:
                 self.screen.blit(self.game_over_surface, self.game_over_rect)
 
             # Floor
             self.draw_floor()
 
+            # Move slides
+            for slider in self.sliders:
+                if slider.hit:
+                    slider.move()
+
+            self.screen.blit(self.sliders_bg, (0, WORLD['HEIGHT']-100))
+
+            # Draws slider
+            for slider in self.sliders:
+                slider.draw(self.screen)
+
             pygame.display.update()
-            self.clock.tick(1000)
+            self.clock.tick(self.sliders[0].val)
 
         pygame.quit()
 
@@ -137,11 +158,9 @@ class FlappBird:
         self.timer = 0
 
         self.offscreen_pipe_index = 0
-        self.addTimer = PIPE['PIPE_SPACING']
+        self.add_pipe_timer = 2*PIPE['PIPE_SPACING']/PIPE['PIPE_SPEED']
         
         self.reset_pipes()
-
-        # save_weights(best_bird_weights, "weights")
 
         self.current_generation += 1
 
@@ -160,7 +179,7 @@ class FlappBird:
         """
             Returns a new pair of pipes, with random height.
         """
-        random_pipe_pos = random.choice(self.pipe_height)
+        random_pipe_pos = random.choice([200, 300, 400])
         bottom_pipe = self.pipe_surface.get_rect(midtop = ((pipe_number*PIPE['PIPE_SPACING'])+350, random_pipe_pos))
         top_pipe = self.pipe_surface.get_rect(midbottom = ((pipe_number*PIPE['PIPE_SPACING'])+350, random_pipe_pos - 150))
 
@@ -219,7 +238,7 @@ class FlappBird:
             for weight in weights:
                 for i, _ in enumerate(weight):
                     if np.random.uniform(0, 1) > 0.8:
-                        change = np.random.uniform(-0.5,0.5)
+                        change = np.random.uniform(-0.5, 0.5)
                         weight[i] += change
         return mutated_weights
 
@@ -259,7 +278,6 @@ class FlappBird:
         loaded_weights[1] = loaded_weights[1].reshape(BIRD['WEIGHTS2'][0] , BIRD['WEIGHTS2'][1])
 
         return loaded_weights
-
 
 if __name__ == "__main__":
     game = FlappBird()

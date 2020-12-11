@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## 2020-12-10 : Commit : "Optimization. Commenting."
+### Changed
+
+1. Finished commenting.
+2. More efficient when going through the birds list.
+3. Slider to change framerate in real time.
+4. I finished all what I planned.
+
+## [Unreleased]
+
 ## 2020-12-10 : Commit : "Game in a class. Fixed pipe system."
 ### Changed
 
