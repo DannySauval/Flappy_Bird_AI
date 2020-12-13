@@ -25,19 +25,18 @@ class Slider():
         self.mini = mini  # minimum at slider position left
         self.xpos = pos  # x-location on screen
         self.ypos = WORLD['HEIGHT']
-        self.surf = pygame.surface.Surface((100, 100))
+        self.surf = pygame.surface.Surface((100, 50))
         self.hit = False  # the hit attribute indicates slider movement due to mouse interaction
+        self.name = name
+        self.font = pygame.font.SysFont("Arial", 16)
 
-        self.txt_surf = font.render(name, 1, BLACK)
+        self.txt_surf = self.font.render(self.name + " " + str(self.val), 1, BLACK)
         self.txt_rect = self.txt_surf.get_rect(center=(50, 15))
 
         # Static graphics - slider background #
-        self.surf.fill((100, 100, 100))
-        pygame.draw.rect(self.surf, GREY, [0, 0, 100, 50], 3)
-        pygame.draw.rect(self.surf, ORANGE, [10, 10, 80, 10], 0)
+        self.surf.fill(GREY)
+        pygame.draw.rect(self.surf, RED, [0, 0, 100, 50], 3)
         pygame.draw.rect(self.surf, WHITE, [10, 30, 80, 5], 0)
-
-        self.surf.blit(self.txt_surf, self.txt_rect)  # this surface never changes
 
         # dynamic graphics - button surface #
         self.button_surf = pygame.surface.Surface((20, 20))
@@ -54,6 +53,10 @@ class Slider():
         surf = self.surf.copy()
 
         # dynamic
+        surf.fill(GREY)
+        pygame.draw.rect(surf, RED, [0, 0, 100, 50], 3)
+        pygame.draw.rect(surf, WHITE, [10, 30, 80, 5], 0)
+        surf.blit(self.txt_surf, self.txt_rect)
         pos = (10+int((self.val-self.mini)/(self.maxi-self.mini)*80), 33)
         self.button_rect = self.button_surf.get_rect(center=pos)
         surf.blit(self.button_surf, self.button_rect)
@@ -71,3 +74,4 @@ class Slider():
             self.val = self.mini
         if self.val > self.maxi:
             self.val = self.maxi
+        self.txt_surf = self.font.render(self.name + " " + str(self.val), 1, BLACK)

@@ -12,7 +12,7 @@ WORLD = dict(
 
 # BIRD CONSTANTS
 BIRD = dict(
-    POP_SIZE = 1000,
+    POP_SIZE = 500,
     WEIGHTS1 = (4, 7),
     WEIGHTS2 = (7, 1),
     GRAVITY = 0.200,

@@ -56,7 +56,7 @@ class FlappBird:
         self.current_generation = 0
         self.best_gen_highscore = 0
 
-        self.sliders = [Slider("FPS", WORLD['FPS'], 10, 1000, 0, self.game_font)]
+        self.sliders = [Slider("FPS", WORLD['FPS'], 10, 2000, 0, self.game_font)]
 
     def run(self):
         """
@@ -127,7 +127,7 @@ class FlappBird:
                 if slider.hit:
                     slider.move()
 
-            self.screen.blit(self.sliders_bg, (0, WORLD['HEIGHT']-100))
+            self.screen.blit(self.sliders_bg, (0, WORLD['HEIGHT']))
 
             # Draws slider
             for slider in self.sliders:

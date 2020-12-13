@@ -6,7 +6,7 @@ The format is based on [Best-README-Template](https://github.com/othneildrew/Bes
 <br />
 <p align="center">
   <a href="https://github.com/DannySauval/Flappy_Bird_AI">
-    <img src="assets/bluebird-midflap.png" alt="Logo" width="80" height="80">
+    <img src="assets/bluebird-midflap.png" alt="Logo" width="80">
   </a>
 
   <h3 align="center">Flappy Bird AI</h3>
@@ -55,6 +55,8 @@ The format is based on [Best-README-Template](https://github.com/othneildrew/Bes
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+I wanted to do make a simple game using what I learned about AI lastly. The idea was to be as simple as possible, but start from scratch. I forbid myself to use anything else than numpy and pygame or standard libraries.
+I decided to go with Flappy Bird which is a simple game to implement qnd to play. Only a few data are required for the bird to play, and the output decidion is easy, either you jump or you don't.
 
 ### Built With
 
@@ -71,10 +73,15 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
+There are a few requirements to be able to run Flappy Bird AI.
+* Python 3.x : <a hfref="https://www.python.org/downloads/">https://www.python.org/downloads/</a>
+* pygame
   ```sh
-  npm install npm@latest -g
+  pip install pygame
+  ```
+* numpy
+  ```sh
+  pip install numpy
   ```
 
 ### Installation
@@ -83,12 +90,10 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/DannySauval/Flappy_Bird_AI.git
    ```
-2. Install NPM packages
+2. Run FlappyBird.py
    ```sh
-   npm install
+   py.exe FlappyBird.py
    ```
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
