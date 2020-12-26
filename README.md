@@ -52,8 +52,10 @@ The format is based on [Best-README-Template](https://github.com/othneildrew/Bes
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-I wanted to do make a simple game using what I learned about AI lastly. The idea was to be as simple as possible, AND start from scratch. I forbid myself to use anything else than numpy and pygame or standard libraries.
+I wanted to make a simple game using what I learned about AI lastly. The idea was to be as simple as possible, AND start from scratch. I forbid myself to use anything else than numpy and pygame or standard libraries.
+
 I decided to go with Flappy Bird which is a simple game to implement and play (except for me, I suck at this game). Only a few data are required for the bird to play, and the output decision is simple, either you jump or you don't.
+
 The AI behind this project is a simple neural network (just one hidden layer). The learning process uses part of a genetic algorithm, I take the best bird and I tweak its genes to generate a new generation.
 
 
@@ -90,9 +92,9 @@ There are a few requirements to be able to run Flappy Bird AI.
 ## Usage
 
 I wrote the code keeping in mind I wanted to be able to tweak parameters and see what it does on the final result. In my opinion, it is the best way to learn. 
-You can change most of the settings in the `settings.py` file and see what it does, like the number of birds for each generation. Reagrding the mutation specific settings it is not yet using parameters from the settings file, maybe it will in a future version. But if you want to tweak them, you should check the `model_mutate()` method.
+You can change most of the settings in the `settings.py` file and see what it does, like the number of birds for each generation. Regarding the mutation specific settings it is not yet using parameters from the settings file, maybe it will in a future version. But if you want to tweak them, you should check the `model_mutate()` method.
 
-I hope evrything is clear enough and that this project will help people. If you have any question or suggestion, feel free to contact me !
+I hope everything is clear enough and that this project will help people. If you have any question or suggestion, feel free to contact me !
 
 
 <!-- CONTACT -->
@@ -108,5 +110,5 @@ Project Link: [https://github.com/DannySauval/Flappy_Bird_AI](https://github.com
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* [Clear code](https://www.youtube.com/watch?v=UZg49z76cLw) The Flappy Bird game mechanics come from him. I designes my Flappy Bird quicker and better thanks to his video. Thanks !
+* [Clear code](https://www.youtube.com/watch?v=UZg49z76cLw) The Flappy Bird game mechanics come from him. I designed my Flappy Bird quicker and better thanks to his video. Thanks !
 * Internet !
