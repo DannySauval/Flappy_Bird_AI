@@ -33,9 +33,6 @@ The format is based on [Best-README-Template](https://github.com/othneildrew/Bes
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -55,15 +52,9 @@ The format is based on [Best-README-Template](https://github.com/othneildrew/Bes
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-I wanted to do make a simple game using what I learned about AI lastly. The idea was to be as simple as possible, but start from scratch. I forbid myself to use anything else than numpy and pygame or standard libraries.
-I decided to go with Flappy Bird which is a simple game to implement qnd to play. Only a few data are required for the bird to play, and the output decidion is easy, either you jump or you don't.
-
-### Built With
-
-* []()
-* []()
-* []()
-
+I wanted to do make a simple game using what I learned about AI lastly. The idea was to be as simple as possible, AND start from scratch. I forbid myself to use anything else than numpy and pygame or standard libraries.
+I decided to go with Flappy Bird which is a simple game to implement and play (except for me, I suck at this game). Only a few data are required for the bird to play, and the output decision is simple, either you jump or you don't.
+The AI behind this project is a simple neural network (just one hidden layer). The learning process uses part of a genetic algorithm, I take the best bird and I tweak its genes to generate a new generation.
 
 
 <!-- GETTING STARTED -->
@@ -75,13 +66,13 @@ To get a local copy up and running follow these simple steps.
 
 There are a few requirements to be able to run Flappy Bird AI.
 * Python 3.x : <a hfref="https://www.python.org/downloads/">https://www.python.org/downloads/</a>
-* pygame
+* pygame 
   ```sh
   pip install pygame
   ```
-* numpy
+* numpy (at the time of writing, there is a bug in the latest version of numpy, 1.19.4)
   ```sh
-  pip install numpy
+  pip install numpy==1.19.3
   ```
 
 ### Installation
@@ -98,16 +89,10 @@ There are a few requirements to be able to run Flappy Bird AI.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+I wrote the code keeping in mind I wanted to be able to tweak parameters and see what it does on the final result. In my opinion, it is the best way to learn. 
+You can change most of the settings in the `settings.py` file and see what it does, like the number of birds for each generation. Reagrding the mutation specific settings it is not yet using parameters from the settings file, maybe it will in a future version. But if you want to tweak them, you should check the `model_mutate()` method.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-
-<!-- LICENSE -->
-<!--## License
-
-Distributed under the MIT License. See `LICENSE` for more information.-->
-
+I hope evrything is clear enough and that this project will help people. If you have any question or suggestion, feel free to contact me !
 
 
 <!-- CONTACT -->
@@ -123,6 +108,5 @@ Project Link: [https://github.com/DannySauval/Flappy_Bird_AI](https://github.com
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* []()
-* []()
-* []()
+* [Clear code](https://www.youtube.com/watch?v=UZg49z76cLw) The Flappy Bird game mechanics come from him. I designes my Flappy Bird quicker and better thanks to his video. Thanks !
+* Internet !
