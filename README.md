@@ -52,7 +52,7 @@ The format is based on [Best-README-Template](https://github.com/othneildrew/Bes
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-I wanted to make a simple game using what I learned about AI lastly. The idea was to be as simple as possible, AND start from scratch. I forbid myself to use anything else than numpy and pygame or standard libraries.
+I wanted to make a simple game using what I learned about AI lastly. The idea was to be as simple as possible, AND start from scratch. I forbid myself to use anything other than numpy and pygame or standard libraries.
 
 I decided to go with Flappy Bird which is a simple game to implement and play (except for me, I suck at this game). Only a few data are required for the bird to play, and the output decision is simple, either you jump or you don't.
 
